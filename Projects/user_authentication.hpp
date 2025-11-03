@@ -98,8 +98,9 @@ public:
 
             if (temp_id == temp->ID && temp_pw == temp->password)
             {
-                std::cout <<"\033[1m [Account verrified]\033[0m\n";
+                std::cout <<"\033[1m [Account verified]\033[0m\n";
                 found = true;
+                
                 break;
             }
 
@@ -114,7 +115,12 @@ public:
                     std::getline(std::cin >> std::ws, temp_pw);
                     clear_console();
                     attempts--;
-                    attempts == 0 ? std::cout << blocked_users() : std::cout << "wrong password!!\n";
+                    if(attempts == 0 && temp_pw != temp->password){
+                        std::cout << blocked_users();
+                    }
+                    else if(temp_pw != temp->password){
+                        std::cout << "wrong password!!\n";
+                    }
                 } while (attempts > 0 && temp_pw != temp->password);
 
                 if (temp_pw == temp->password)

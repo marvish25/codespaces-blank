@@ -14,8 +14,7 @@ void menu::main_menu()
 {
 
     std::string choice_str;
-    char choice;
-
+    char choice ='\0';
     do
     {
         /* code */
@@ -41,24 +40,23 @@ void menu::main_menu()
                 break;
             case '2':
                 login();
-                if (found)
+                if (head == NULL)
                 {
-                    user_menu();
+                    std::cout <<"[No available users in the system!]\n";
                 }
-                else if(head == NULL){
-                    std::cout << "[ No available users in the system! ]\n";
+                else if(found){
+                    user_menu();
+                    found = false;  
                 }
 
                 break;
             case '3':
-                if(head== NULL)
+                if (head == NULL)
                 {
-                    std::cout << "[ No available users in the system! ]\n";
+                    std::cout << "[no users available in the system]\n";
+                    break;
                 }
-                else
-                {
-                    view_users();
-                } 
+                view_users();
                 break;
             case '4':
                 std::cout << "\033[1mTHANK YOU FOR USING MY CODE RATE IT OUT OF 10 \033[0m\n";
@@ -78,14 +76,20 @@ void menu::main_menu()
 
 void menu::user_menu()
 {
-    char choice;
+    if (head == NULL)
+    {
+        std::cout << "[no users available in the system]\n";
+        found = false;
+        return;
+    }
+    char choice = '\0';
     std::string choice_str;
 
     do
     {
         
         std::cout << "\033[1m__________________________________\033[0m\n";
-        std::cout << "          \033[1m WELLCOME " << head->pref_name << "\033[0m\n";
+        std::cout << "          \033[1m WELCOME " << head->pref_name << "\033[0m\n";
         std::cout << "\033[1m***********************************\033[1m\n";
         std::cout << "1. Remove user\n";
         std::cout << "2. Modify details\n";
