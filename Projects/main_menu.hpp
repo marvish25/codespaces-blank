@@ -1,5 +1,6 @@
 #include "user_authentication.hpp"
 
+
 class menu : public user_authontication
 {
 
@@ -47,7 +48,14 @@ void menu::main_menu()
 
                 break;
             case '3':
-                view_users();
+                if(head== NULL)
+                {
+                    std::cout << "[ No available users in the system! ]\n";
+                }
+                else
+                {
+                    view_users();
+                } 
                 break;
             case '4':
                 std::cout << "\033[1mTHANK YOU FOR USING MY CODE RATE IT OUT OF 10 \033[0m\n";
@@ -72,8 +80,9 @@ void menu::user_menu()
 
     do
     {
-        std::cout << "1. remove user\n";
-        std::cout << "2. back\n";
+        std::cout << "1. Remove user\n";
+        std::cout << "2. Modify details\n";
+        std::cout << "3. back\n";
         std::cout << "enter choice here :";
         std::getline(std::cin >> std::ws, choice_str);
         clear_console();
@@ -86,9 +95,11 @@ void menu::user_menu()
                 remove_user();
                 break;
             case '2':
+                std::cout << modify() <<"\n";
+                break;
+            case '3': 
                 found = false;
                 break;
-            
             default:
                 std::cout << "[invalid option!]\n";
                 break;

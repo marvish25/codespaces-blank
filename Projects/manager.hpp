@@ -1,12 +1,12 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <cstdlib>
 #include <regex>
 typedef std::string string;
 
 struct Details
 {
+    
     std::string ID, pref_name, password;
     Details *Next;
 };
@@ -15,7 +15,7 @@ class user_manager
 {
 
 protected:
-    Details *head = new Details();
+    Details *head = nullptr;
     std::string temp_id, temp_pw, temp_pn, password;
     int size = 0;
 
@@ -23,7 +23,7 @@ protected:
 
 public:
     
-    
+    std::string modify();
     std::string blocked_users();
     void from_file();
     void view_users();         
@@ -78,7 +78,7 @@ void user_manager::remove_user()
 
 void user_manager::from_file()
 {
-    head = NULL;
+    
     std::ifstream file("storage.txt");
     while (std::getline(file >> std::ws, temp_id), std::getline(file >> std::ws, temp_pn), std::getline(file >> std::ws, password))
     {
@@ -91,7 +91,7 @@ void user_manager::from_file()
 
 void user_manager::view_users()
 {
-    std::cout << "___________________________________________________________________\n";
+    std::cout << "________________________________________________________________\n";
     std::cout << "\033[1m***********LIST OF THE USERS AVAILABLE IN THE SYSTEM***********\n\n";
 
     
@@ -109,7 +109,7 @@ void user_manager::view_users()
         i++;
     }
 
-    std::cout << "***********************************************************************\n";
+    std::cout << "*****************************************************************\n";
 }
 
 std::string user_manager::blocked_users()
@@ -126,4 +126,9 @@ void user_manager::clear_console()
 #else
     system("clear");
 #endif
+}
+
+std::string user_manager::modify()
+{
+    return "[Detail cannot be modified !!]";
 }
