@@ -45,6 +45,9 @@ void menu::main_menu()
                 {
                     user_menu();
                 }
+                else if(head == NULL){
+                    std::cout << "[ No available users in the system! ]\n";
+                }
 
                 break;
             case '3':
@@ -80,6 +83,10 @@ void menu::user_menu()
 
     do
     {
+        
+        std::cout << "\033[1m__________________________________\033[0m\n";
+        std::cout << "          \033[1m WELLCOME " << head->pref_name << "\033[0m\n";
+        std::cout << "\033[1m***********************************\033[1m\n";
         std::cout << "1. Remove user\n";
         std::cout << "2. Modify details\n";
         std::cout << "3. back\n";
@@ -96,6 +103,7 @@ void menu::user_menu()
                 break;
             case '2':
                 std::cout << modify() <<"\n";
+                
                 break;
             case '3': 
                 found = false;
@@ -109,7 +117,7 @@ void menu::user_menu()
         {
             std::cout << "[please enter only (1,2,3 or 4)]\n";
         }
-    } while (choice != '2');
+    } while (choice != '3');
 }
 void menu::execute()
 {

@@ -92,17 +92,13 @@ public:
         std::getline(std::cin >> std::ws, temp_pw);
         clear_console();
         Details* temp = head;
+        
         while (temp != NULL)
         {
 
             if (temp_id == temp->ID && temp_pw == temp->password)
             {
-
-                std::cout << "\033[1m[account verified!]\033[0m\n";
-                std::cout << "__________________________________\n";
-                std::cout << "          \033[1mWELLCOME " << temp->pref_name << "\033[0m\n";
-                std::cout << "***********************************\n";
-
+                std::cout <<"\033[1m [Account verrified]\033[0m\n";
                 found = true;
                 break;
             }
@@ -123,10 +119,7 @@ public:
 
                 if (temp_pw == temp->password)
                 {
-                    std::cout << "\033[1m__________________________________\033[0m\n";
-                    std::cout << "          \033[1m WELLCOME " << temp->pref_name << "\033[0m\n";
-                    std::cout << "\033[1m***********************************\033[1m\n";
-
+                    std::cout <<"\033[1m [Account verrified]\033[0m\n";
                     found = true;
                 }
 
