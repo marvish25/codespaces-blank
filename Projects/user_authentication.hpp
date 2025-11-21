@@ -8,7 +8,7 @@ class user_authontication : public user_manager
     std::string strong_pw = "!@#$%&:;";
 
 
-    std::string hash_func(const std::string &plain_text) // This hash func is from gemini
+    std::string hash_func(const std::string &plain_text) 
     {
         std::hash<std::string> hasher;
         size_t hashed_value = hasher(plain_text); // Converts string to a huge number
@@ -18,7 +18,7 @@ class user_authontication : public user_manager
 
 protected:
     bool found = false;
-    Details *logged_in_user = nullptr; // New Member! from gemini
+    Details *logged_in_user = nullptr;
 
 
 
@@ -132,7 +132,7 @@ public:
             {
                 std::cout <<" [ Account verified ]\n";
                 found = true;
-                logged_in_user = temp;       //Gemini
+                logged_in_user = temp;       
                 break;
             }
             else if(temp_id == temp->ID && input_hash != temp->password )
@@ -153,7 +153,7 @@ public:
                 if(input_hash == temp->password){
                     std::cout <<" [ Account verified ]\n";
                     found = true;
-                    logged_in_user = temp;     //Gemini
+                    logged_in_user = temp;     
                     break;
                 }
                 
