@@ -7,18 +7,44 @@ class user_authontication : public user_manager
 
     std::string strong_pw = "!@#$%&:;";
 
+
+    std::string hash_func(const std::string &plain_text) // This hash func is from gemini
+    {
+        std::hash<std::string> hasher;
+        size_t hashed_value = hasher(plain_text); // Converts string to a huge number
+        return std::to_string(hashed_value);      // Returns that number as a string
+    }
+
+
 protected:
     bool found = false;
+    Details *logged_in_user = nullptr; // New Member! from gemini
+
+
+
+
 
 public:
     bool Email_validation(const std::string &email);
     void sign_in()
     {
+
         Details *temp = head;
         bool found = false;
         int count = 0;
-        std::cout << "enter your prefered name :";
-        std::getline(std::cin >> std::ws, temp_pn);
+        do
+        {
+            if (count > 0)
+            {
+                std::cout << "[ email not required here ]\n";
+            }
+
+            std::cout << "enter your prefered name :";
+            std::getline(std::cin >> std::ws, temp_pn);
+            count++;
+            clear_console();
+        } while (Email_validation(temp_pn));
+        count = 0;
 
         // Using the regex library to validate the format of the email address
         do
@@ -45,98 +71,100 @@ public:
             {
 
                 std::cout << "enter new password :";
-                std::getline(std::cin >> std::ws, password);
-                std::cout << "confirm password :";
                 std::getline(std::cin >> std::ws, temp_pw);
+                std::cout << "confirm password :";
+                std::getline(std::cin >> std::ws, confirm_pw);
                 clear_console();
-                if (password != temp_pw)
+                if (confirm_pw != temp_pw)
                 {
                     std::cout << "[password don't match!]\n";
                 }
-                for (int i = 0; i < password.length(); i++)
+
+                else
                 {
-                    for (int j = 0; j < strong_pw.length(); j++)
+                    for (int i = 0; i < temp_pw.length(); i++)
                     {
-                        if (password[i] == strong_pw[j])
+                        for (int j = 0; j < strong_pw.length(); j++)
                         {
-                            count++;
+                            if (temp_pw[i] == strong_pw[j])
+                            {
+                                count++;
+                            }
                         }
                     }
+                    count >= 2 ? pass_strength = true : pass_strength = false;
                 }
-                count >= 2 ? pass_strength = true : pass_strength = false;
-                if (pass_strength == false && password == temp_pw)
+                if (pass_strength == false && confirm_pw == temp_pw)
                 {
                     std::cout << "[weak password include atleast two special characters (!@#$%&;:)]\n";
                     count = 0;
                 }
-            } while (password != temp_pw || pass_strength == false);
+            } while (confirm_pw != temp_pw || pass_strength == false);
+            
 
-            std::ofstream file("storage.txt", std::ios::app);
-            file << temp_id << "\n";
-            file << temp_pn << "\n";
-            file << password << "\n";
+
+            
             std::cout << "[\033[1m ****ACCOUNT CREATED SUCCESSFULLY****]\n";
             temp_pw.clear();
-            front_insert(temp_id, temp_pn, password);
+            std::string secure_hash = hash_func(confirm_pw);
+            front_insert(temp_id, temp_pn, secure_hash);
+            To_file();
         }
     }
 
     void login()
     {
 
-        int attempts = 4;
 
-        std::cout << "enter your Email address :";
-        std::getline(std::cin >> std::ws, temp_id);
-        std::cout << "enter your password   :";
-        std::getline(std::cin >> std::ws, temp_pw);
-        clear_console();
-        Details* temp = head;
-        
+        int attempts = 4;
+        std::string input_hash;
+        Details *temp = head;
+
+        std::cout << "Enter Email address : ";
+        std::getline(std::cin >>std::ws , temp_id);
+        std::cout << "Enter password      : ";
+        std::getline(std::cin >> std::ws , temp_pw);
+        input_hash = hash_func(temp_pw);
         while (temp != NULL)
         {
-
-            if (temp_id == temp->ID && temp_pw == temp->password)
+            
+            if(temp_id == temp->ID && input_hash == temp->password)
             {
-                std::cout <<"\033[1m [Account verified]\033[0m\n";
+                std::cout <<" [ Account verified ]\n";
                 found = true;
+                logged_in_user = temp;       //Gemini
+                break;
+            }
+            else if(temp_id == temp->ID && input_hash != temp->password )
+            {
                 
-                break;
-            }
-
-            else if (temp_id == temp->ID && temp_pw != temp->password)
-            {
-                std::cout << "wrong password!!\n";
-                do
-                {
-
-                    std::cout << "\033[0m****you have " << attempts << " attempts left!!****\033[1m\n\n";
-                    std::cout << "enter password  :";
-                    std::getline(std::cin >> std::ws, temp_pw);
-                    clear_console();
+                
+                do{
+                    if( attempts == 0 ){
+                        blocked_users();
+                        break;
+                    }
+                    std::cout << "[ Incorrect password ]\n";
+                    std::cout << " Re-enter password :";
+                    std::getline(std::cin >> std::ws ,temp_pw);
+                    input_hash = hash_func(temp_pw);
                     attempts--;
-                    if(attempts == 0 && temp_pw != temp->password){
-                        std::cout << blocked_users();
-                    }
-                    else if(temp_pw != temp->password){
-                        std::cout << "wrong password!!\n";
-                    }
-                } while (attempts > 0 && temp_pw != temp->password);
-
-                if (temp_pw == temp->password)
-                {
-                    std::cout <<"\033[1m [Account verrified]\033[0m\n";
+                }while(input_hash != temp->password);
+                if(input_hash == temp->password){
+                    std::cout <<" [ Account verified ]\n";
                     found = true;
+                    logged_in_user = temp;     //Gemini
+                    break;
                 }
-
-                break;
+                
             }
-            else if (!found && temp->Next == NULL)
-            {
-
-                std::cout << "[account does not exist]\n";
-            }
+            
+            
             temp = temp->Next;
+        }
+        if (!found)
+        {
+            std::cout <<" [ Account not found ]\n";
         }
     }
 };

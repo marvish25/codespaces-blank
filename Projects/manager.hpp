@@ -2,6 +2,9 @@
 #include <string>
 #include <fstream>
 #include <regex>
+#include <functional>
+
+
 typedef std::string string;
 
 struct Details
@@ -11,36 +14,54 @@ struct Details
     Details *Next;
 };
 
+
 class user_manager
 {
 
 protected:
     Details *head = nullptr;
-    std::string temp_id, temp_pw, temp_pn, password;
+    std::string temp_id, temp_pw, temp_pn, confirm_pw;
     int size = 0;
 
     
 
 public:
     
+
+
+
+
+ // Add this destructor
+    ~user_manager() { 
+        Details *current = head; 
+        while (current != nullptr) {
+            Details *next = current->Next;
+            delete current; 
+            current = next; 
+        }
+    head = nullptr;
+    } 
     std::string modify();
     std::string blocked_users();
     void from_file();
+    void To_file();
     void view_users();         
     void clear_console();
-    void front_insert(string temp_id, string temp_pn, string password);
+    void front_insert(string temp_id, string temp_pn, string temp_pw);
     void remove_user();
 };
 
-void user_manager::front_insert(string temp_id, string temp_pn, string password)
+
+void user_manager::front_insert(string temp_id, string temp_pn, string temp_pw)
 {
     Details *new_node = new Details();
     new_node->ID = temp_id;
     new_node->pref_name = temp_pn;
-    new_node->password = password;
+    new_node->password = temp_pw;
     new_node->Next = head;
     head = new_node;
 }
+
 
 void user_manager::remove_user()
 {
@@ -74,20 +95,40 @@ void user_manager::remove_user()
     prev->Next = current->Next;
     std::cout <<delete_id << "  succesfully removed !\n";
     delete current;
+
+    
 }
+
 
 void user_manager::from_file()
 {
     
-    std::ifstream file("storage.txt");
-    while (std::getline(file >> std::ws, temp_id), std::getline(file >> std::ws, temp_pn), std::getline(file >> std::ws, password))
+    std::fstream read_file;
+    read_file.open("storage.txt");
+    while (std::getline(read_file >> std::ws , temp_id) && std::getline(read_file >> std::ws, temp_pn) && std::getline(read_file >> std::ws , temp_pw))
     {
 
-        front_insert(temp_id, temp_pn, password);
+        front_insert(temp_id, temp_pn, temp_pw);
         size++;
     
     }
 }
+
+void user_manager::To_file()
+{
+    Details *temp = head;
+    std::string data;
+    std::ofstream write_file;
+    write_file.open("storage.txt");
+    while(temp != NULL)
+    {
+        write_file << temp->ID << "\n" ;
+        write_file << temp->pref_name << "\n" ;
+        write_file << temp->password << "\n" ;
+        temp = temp->Next;
+    }
+}
+
 
 void user_manager::view_users()
 {
@@ -112,11 +153,11 @@ void user_manager::view_users()
     std::cout << "*****************************************************************\n";
 }
 
+
 std::string user_manager::blocked_users()
 {
     return "[account blocked]\n";
 }
-
 
 
 void user_manager::clear_console()
@@ -127,6 +168,7 @@ void user_manager::clear_console()
     system("clear");
 #endif
 }
+
 
 std::string user_manager::modify()
 {

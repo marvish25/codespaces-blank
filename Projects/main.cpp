@@ -1,9 +1,8 @@
 #include"main_menu.hpp"
-
     int main()
     {
-        
         menu user;
-        user.execute(); 
+        user.execute();
+        
         return 0;
     }

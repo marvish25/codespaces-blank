@@ -76,6 +76,7 @@ void menu::main_menu()
 
 void menu::user_menu()
 {
+    
     if (head == NULL)
     {
         std::cout << "[no users available in the system]\n";
@@ -89,7 +90,7 @@ void menu::user_menu()
     {
         
         std::cout << "\033[1m__________________________________\033[0m\n";
-        std::cout << "          \033[1m WELCOME " << head->pref_name << "\033[0m\n";
+        std::cout << "          \033[1m WELCOME "<< logged_in_user->pref_name <<"\033[0m\n";
         std::cout << "\033[1m***********************************\033[1m\n";
         std::cout << "1. Remove user\n";
         std::cout << "2. Modify details\n";
@@ -104,6 +105,8 @@ void menu::user_menu()
             {
             case '1':
                 remove_user();
+                To_file();
+                found = false;
                 break;
             case '2':
                 std::cout << modify() <<"\n";
